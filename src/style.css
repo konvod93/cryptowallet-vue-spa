@@ -10,7 +10,7 @@
             min-height: 100vh;
         }
         
-        .app {
+        #app {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
