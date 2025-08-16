@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Импортируем компоненты страниц
-import HomePage from '../views/HomePage.vue'
-import WalletPage from '../views/WalletPage.vue'
-import SendPage from '../views/SendPage.vue'
-import TransactionsPage from '../views/TransactionsPage.vue'
+import HomePage from '../components/pages/HomePage.vue'
+import WalletPage from '../components/pages/WalletPage.vue'
+import SendPage from '../components/pages/SendPage.vue'
+import TransactionsPage from '../components/pages/TransactionsPage.vue'
 import SettingsPage from '../views/SettingsPage.vue'
 
 const routes = [
