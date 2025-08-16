@@ -5,7 +5,7 @@ import HomePage from '../components/pages/HomePage.vue'
 import WalletPage from '../components/pages/WalletPage.vue'
 import SendPage from '../components/pages/SendPage.vue'
 import TransactionsPage from '../components/pages/TransactionsPage.vue'
-import SettingsPage from '../views/SettingsPage.vue'
+import SettingsPage from '../components/pages/SettingsPage.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },

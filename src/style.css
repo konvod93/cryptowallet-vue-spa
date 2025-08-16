@@ -258,3 +258,7 @@
             transform: translateX(-30px);
             opacity: 0;
         }
+
+        .main-content {
+          margin-top: 25px;
+        }
