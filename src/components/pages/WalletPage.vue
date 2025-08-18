@@ -18,7 +18,7 @@
             <h2>📊 Последние транзакции</h2>
             <div class="transaction-list">
                 <div v-for="transaction in state.transactions.slice(0, 3)" :key="transaction.id"
-                    :class="['transaction', transaction.type === 'send' ? 'transaction-send' : 'transaction-receive']">
+                    class="['transaction', transaction.type === 'send' ? 'transaction-send' : 'transaction-receive']">
                     <div class="transaction-info">
                         <div class="transaction-type">
                             {{ transaction.type === 'send' ? '📤 Отправлено' : '📥 Получено' }}
@@ -41,8 +41,16 @@
 </template>
 
 <script lang="ts">
+interface Transaction {
+  id: string;
+  type: 'send' | 'receive';
+  date: string;
+  amount: number;
+}
+
 export default {
-  data() {
+  data(): { state: { balance: number; currency: string; transactions: Transaction[] } }
+ {
     return {
       state: {
         balance: 0,
