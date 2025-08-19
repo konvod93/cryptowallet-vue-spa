@@ -41,22 +41,20 @@
 </template>
 
 <script lang="ts">
-interface Transaction {
-  id: string;
-  type: 'send' | 'receive';
-  date: string;
-  amount: number;
+import { globalState } from '../../state/globalState';
+import { defineComponent } from 'vue';
+
+interface ComponentData {
+  state: typeof globalState;
 }
 
-export default {
-  data(): { state: { balance: number; currency: string; transactions: Transaction[] } }
- {
+
+export default defineComponent({
+  name: '',
+  data(): ComponentData {
     return {
-      state: {
-        balance: 0,
-        currency: 'UAH',
-        transactions: []
-      }
+      state:
+        globalState
     };
   },
   methods: {
@@ -68,5 +66,5 @@ export default {
       this.state.balance = Math.round((Math.random() * 2000 + 500) * 100) / 100;
     }
   }
-};
+});
 </script>
