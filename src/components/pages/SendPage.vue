@@ -36,5 +36,76 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
+import { globalState } from '../../state/globalState';
+import type { Transaction } from '../../types/transaction';
 
+interface FormData {
+  recipient: string;
+  amount: string;
+  memo: string;
+}
+
+interface ComponentData {
+  form: FormData;
+  sending: boolean;
+  state: typeof globalState;
+}
+
+export default defineComponent({
+  name: 'TransactionForm',
+
+  data(): ComponentData {
+    return {
+      form: {
+        recipient: '',
+        amount: '',
+        memo: ''
+      },
+      sending: false,
+      state: globalState
+    };
+  },
+
+  computed: {
+    isFormValid(): boolean {
+      const amount = parseFloat(this.form.amount);
+      return (
+        this.form.recipient.trim() !== '' &&
+        !isNaN(amount) &&
+        amount > 0 &&
+        amount <= this.state.balance
+      );
+    }
+  },
+
+  methods: {
+    async sendTransaction() {
+      this.sending = true;
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const amount = parseFloat(this.form.amount);
+
+      const newTx: Transaction = {
+        id: Date.now(),
+        type: 'send',
+        amount: -amount,
+        to: this.form.recipient,
+        date: new Date().toISOString(),
+        memo: this.form.memo
+      };
+
+      this.state.transactions.unshift(newTx);
+      this.state.balance -= amount;
+
+      this.form.recipient = '';
+      this.form.amount = '';
+      this.form.memo = '';
+      this.sending = false;
+
+      this.$router.push('/transactions');
+    }
+  }
+});
 </script>
