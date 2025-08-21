@@ -12,7 +12,9 @@ const routes = [
   { path: '/wallet', name: 'Wallet', component: WalletPage },
   { path: '/send', name: 'Send', component: SendPage },
   { path: '/transactions', name: 'Transactions', component: TransactionsPage },
-  { path: '/settings', name: 'Settings', component: SettingsPage }
+  { path: '/settings', name: 'Settings', component: SettingsPage },
+  // Redirect для несуществующих роутов
+  { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 
 export const router = createRouter({
