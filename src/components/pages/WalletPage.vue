@@ -4,8 +4,8 @@
 
         <div class="card wallet-card">
             <div class="currency">Текущий баланс</div>
-            <div class="balance">{{ state.balance.toFixed(2) }}</div>
-            <div class="currency">{{ state.currency }}</div>
+            <div class="balance">{{ wallet.balance.toFixed(2) }}</div>
+            <div class="currency">{{ wallet.currency }}</div>
             <div style="margin-top: 25px;">
                 <router-link to="/send" class="btn" style="background: rgba(255,255,255,0.2);">📤
                     Отправить</router-link>
@@ -17,7 +17,7 @@
         <div class="card">
             <h2>📊 Последние транзакции</h2>
             <div class="transaction-list">
-                <div v-for="transaction in state.transactions.slice(0, 3)" :key="transaction.id"
+                <div v-for="transaction in wallet.transactions.slice(0, 3)" :key="transaction.id"
                     class="['transaction', transaction.type === 'send' ? 'transaction-send' : 'transaction-receive']">
                     <div class="transaction-info">
                         <div class="transaction-type">
@@ -29,7 +29,7 @@
                     </div>
                     <div
                         :class="['transaction-amount', transaction.amount > 0 ? 'amount-positive' : 'amount-negative']">
-                        {{ transaction.type === 'send' ? '-' : '+' }}{{ transaction.amount }} {{ state.currency }}
+                        {{ transaction.type === 'send' ? '-' : '+' }}{{ transaction.amount }} {{ wallet.currency }}
                     </div>
                 </div>
             </div>
@@ -40,31 +40,32 @@
     </div>
 </template>
 
-<script lang="ts">
-import { globalState } from '../../state/globalState';
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { useWalletStore } from '../../stores/walletStore'
+import { onMounted } from 'vue'
 
-interface ComponentData {
-  state: typeof globalState;
+
+const wallet = useWalletStore()
+onMounted(() => {
+  const wallet = useWalletStore()
+  wallet.refreshBalance()
+  wallet.refreshBalance()
+  wallet.refreshBalance()
+})
+
+
+function refreshBalance() {
+  wallet.refreshBalance()
 }
 
-
-export default defineComponent({
-  name: '',
-  data(): ComponentData {
-    return {
-      state:
-        globalState
-    };
-  },
-  methods: {
-    formatDate(dateStr: string): string {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU');
-    },
-    refreshBalance(): void {
-      this.state.balance = Math.round((Math.random() * 2000 + 500) * 100) / 100;
-    }
-  }
-});
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  return date.toLocaleString('uk-UA', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 </script>

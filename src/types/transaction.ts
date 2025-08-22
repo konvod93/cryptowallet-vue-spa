@@ -1,6 +1,6 @@
 // src/types/transaction.ts
 export interface Transaction {
-  id: number;
+  id: string;
   type: 'send' | 'receive';
   amount: number;
   to?: string;
