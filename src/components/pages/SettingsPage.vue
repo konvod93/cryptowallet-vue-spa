@@ -80,35 +80,14 @@
 </template>
 
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { globalState } from '../../state/globalState';
+<script setup lang="ts">
+import { useSettingsStore } from '../../stores/settingsStore'
+import { ref } from 'vue';
 
-interface ComponentData {
-    state: typeof globalState,
-    settings: Settings,
-}
-
-interface Settings {
-    currency: string,
-    notifications: boolean,
-    darkMode: boolean,
-    language: string
-}
-
-export default defineComponent({
-    name: 'SettengPage',
-    data(): ComponentData {
-        return {
-            state: globalState,
-            settings: {
-                currency: 'TON',
-                notifications: false,
-                darkMode: false,
-                language: 'ru',
-            },
-        } 
-    }
-})
+const settings = useSettingsStore();
+const showSeed = ref(false);
+const seedPhrase = ref('your seed phrase here')
 
 </script>
+
+
