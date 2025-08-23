@@ -42,7 +42,7 @@
                     </div>
                     <div
                         :class="['transaction-amount', transaction.amount > 0 ? 'amount-positive' : 'amount-negative']">
-                        {{ transaction.amount > 0 ? '+' : '' }}{{ transaction.amount }} {{ state.currency }}
+                        {{ transaction.amount > 0 ? '+' : '' }}{{ transaction.amount }} {{ wallet.currency }}
                     </div>
                 </div>
             </div>
@@ -50,59 +50,44 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { globalState } from '../../state/globalState';
+<script setup lang="ts">
+import { useTransactionsStore } from '../../stores/transactionsStore';
+import { computed, ref } from 'vue';
+import { useWalletStore } from '../../stores/walletStore';
 
-interface ComponentData {    
-    sending: boolean;
-    state: typeof globalState;
-    filter: 'all' | 'send' | 'receive';
-    sortBy: 'date' | 'amount';
-}
+const transactionsStore = useTransactionsStore();
+const wallet = useWalletStore();
 
-export default defineComponent({
-    name: 'TransactionPage',
-    data(): ComponentData {
-        return {
-            sending: false,
-            state: globalState,
-            filter: 'all',
-            sortBy: 'date'
-        }
-    },
+// 🔧 Фильтр и сортировка как реактивные переменные
+const filter = ref<'all' | 'send' | 'receive'>('all');
+const sortBy = ref<'date' | 'amount'>('date');
 
+// 🧮 Фильтрация и сортировка
+const filteredTransactions = computed(() => {
+  let filtered = transactionsStore.transactions;
 
-    computed: {
-        filteredTransactions() {
-            let filtered = this.state.transactions;
-            // Фильтрация
-            if (this.filter !== 'all') {
-                filtered = filtered.filter(t => t.type === this.filter);
-            }
+  if (filter.value !== 'all') {
+    filtered = filtered.filter(t => t.type === filter.value);
+  }
 
-            // Сортировка
-            filtered = [...filtered].sort((a, b) => {
-                if (this.sortBy === 'date') {
-                    const timeA = Date.parse(a.date);
-                    const timeB = Date.parse(b.date);
-                    if (isNaN(timeA) || isNaN(timeB)) return 0;
-                } else if (this.sortBy === 'amount') {
-                    return Math.abs(b.amount) - Math.abs(a.amount);
-                }
-                return 0;
-            });
-            return filtered;
-        }
-    },
-    methods: {
-        formatDate(dateStr: string): string {
-            const date = new Date(dateStr);
-            if (isNaN(date.getTime())) return 'Неверная дата';
-            return date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU');
-        }
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy.value === 'date') {
+      const timeA = Date.parse(a.date);
+      const timeB = Date.parse(b.date);
+      return timeB - timeA;
+    } else if (sortBy.value === 'amount') {
+      return Math.abs(b.amount) - Math.abs(a.amount);
     }
+    return 0;
+  });
 
-})
+  return sorted;
+});
 
+// 🕰️ Форматирование даты
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return 'Неверная дата';
+  return date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU');
+}
 </script>
