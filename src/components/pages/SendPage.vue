@@ -4,24 +4,24 @@
 
         <div class="card">
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <strong>💰 Доступно:</strong> {{ state.balance.toFixed(2) }} {{ state.currency }}
+                <strong>💰 Доступно:</strong> {{ wallet.balance.toFixed(2) }} {{ wallet.currency }}
             </div>
 
             <form @submit.prevent="sendTransaction">
                 <div class="form-group">
                     <label>📍 Адрес получателя</label>
-                    <input v-model="form.recipient" placeholder="UQ..." required>
+                    <input v-model="state.recipient" placeholder="UQ..." required>
                 </div>
 
                 <div class="form-group">
-                    <label>💎 Сумма ({{ state.currency }})</label>
-                    <input v-model="form.amount" type="number" step="0.01" :max="state.balance" placeholder="0.00"
+                    <label>💎 Сумма ({{ wallet.currency }})</label>
+                    <input v-model="state.amount" type="number" step="0.01" :max="wallet.balance" placeholder="0.00"
                         required>
                 </div>
 
                 <div class="form-group">
                     <label>📝 Комментарий (необязательно)</label>
-                    <input v-model="form.memo" placeholder="Описание платежа">
+                    <input v-model="state.memo" placeholder="Описание платежа">
                 </div>
 
                 <div style="display: flex; gap: 10px; justify-content: center; margin-top: 25px;">
@@ -35,77 +35,40 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { globalState } from '../../state/globalState';
-import type { Transaction } from '../../types/transaction';
+<script setup lang="ts">
 
-interface FormData {
-  recipient: string;
-  amount: string;
-  memo: string;
-}
+import { computed, ref } from 'vue';
+import { useSendStore } from '../../stores/sendStore';
+import { useWalletStore } from '../../stores/walletStore';
 
-interface ComponentData {
-  form: FormData;
-  sending: boolean;
-  state: typeof globalState;
-}
 
-export default defineComponent({
-  name: 'TransactionForm',
-
-  data(): ComponentData {
-    return {
-      form: {
-        recipient: '',
-        amount: '',
-        memo: ''
-      },
-      sending: false,
-      state: globalState
-    };
-  },
-
-  computed: {
-    isFormValid(): boolean {
-      const amount = parseFloat(this.form.amount);
-      return (
-        this.form.recipient.trim() !== '' &&
-        !isNaN(amount) &&
-        amount > 0 &&
-        amount <= this.state.balance
-      );
-    }
-  },
-
-  methods: {
-    async sendTransaction() {
-      this.sending = true;
-
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const amount = parseFloat(this.form.amount);
-
-      const newTx: Transaction = {
-        id: Date.now(),
-        type: 'send',
-        amount: -amount,
-        to: this.form.recipient,
-        date: new Date().toISOString(),
-        memo: this.form.memo
-      };
-
-      this.state.transactions.unshift(newTx);
-      this.state.balance -= amount;
-
-      this.form.recipient = '';
-      this.form.amount = '';
-      this.form.memo = '';
-      this.sending = false;
-
-      this.$router.push('/transactions');
-    }
-  }
+const state = useSendStore();
+const wallet = useWalletStore();
+const sending= ref(false);
+const isFormValid = computed(() => {
+  return (
+    state.recipient.trim() !== '' &&
+    parseFloat(state.amount) > 0 &&
+    parseFloat(state.amount) <= wallet.balance
+  );
 });
+function sendTransaction() {
+  sending.value = true;
+
+  setTimeout(() => {
+    console.log('Отправка:', {
+      to: state.recipient,
+      amount: state.amount,
+      memo: state.memo,
+      currency: wallet.currency,
+    });
+
+    state.resetForm();
+    sending.value = false;
+  }, 1500);
+}
+
+
+
+
 </script>

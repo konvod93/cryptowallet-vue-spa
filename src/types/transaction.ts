@@ -6,5 +6,5 @@ export interface Transaction {
   to?: string;
   from?: string;
   date: string;
-  memo?: string;
+  memo?: string;  
 }
