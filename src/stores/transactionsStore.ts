@@ -10,5 +10,6 @@ export const useTransactionsStore = defineStore('transactions', {
         addTransaction(tx: Transaction) {
             this.transactions.unshift(tx); // добавляем в начало, чтобы новые были сверху
         },
-    }
+    },
+    persist: true,
 })
