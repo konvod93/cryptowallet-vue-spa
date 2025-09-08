@@ -13,14 +13,14 @@ export const useWalletStore = defineStore('wallet', {
       this.balance = newBalance;
     },    
    
-    sendFunds(to: string, amount: number, memo?: string) {
+    sendFunds(_to: string, amount: number, _memo?: string) {
       if (amount > this.balance) throw new Error('Недостаточно средств');
 
       this.balance -= amount;    
 
       
     },
-    receiveFunds(from: string, amount: number, memo?: string) {
+    receiveFunds(_from: string, amount: number, _memo?: string) {
       this.balance += amount;
       
     },
