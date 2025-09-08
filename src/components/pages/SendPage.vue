@@ -11,6 +11,11 @@
         <div class="form-group">
           <label>📍 Адрес получателя</label>
           <input v-model="send.recipient" placeholder="UQ..." required>
+          <div v-if="send.recipient && !isAddressValid" style="color: red; font-size: 0.9em;">
+            ❌ Неверный формат TON-адреса
+          </div>
+
+
         </div>
 
         <div class="form-group">
@@ -32,8 +37,8 @@
       </form>
     </div>
     <div v-if="notification.visible" :class="['notification', notification.type]">
-    {{ notification.message }}
-  </div>
+      {{ notification.message }}
+    </div>
   </div>
 
 </template>
@@ -51,10 +56,16 @@ const send = useSendStore();
 const wallet = useWalletStore();
 const notification = useNotificationStore();
 const transactionsStore = useTransactionsStore();
+const tonAddressRegex = /^UQ[A-Za-z0-9_-]{44,64}$/;
+
+const isAddressValid = computed(() => {
+  return tonAddressRegex.test(send.recipient.trim());
+});
 
 const sending = ref(false);
 const isFormValid = computed(() => {
   return (
+    isAddressValid.value &&
     send.recipient.trim() !== '' &&
     parseFloat(send.amount) > 0 &&
     parseFloat(send.amount) <= wallet.balance
@@ -74,7 +85,7 @@ function sendTransaction() {
       date: new Date().toISOString(),
       memo: send.memo
     });
-    
+
     notification.notify('✅ Средства успешно отправлены', 'success');
     send.resetForm();
   } catch (error) {
