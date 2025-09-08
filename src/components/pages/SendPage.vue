@@ -44,11 +44,13 @@ import { computed, ref } from 'vue';
 import { useSendStore } from '../../stores/sendStore';
 import { useWalletStore } from '../../stores/walletStore';
 import { useNotificationStore } from '../../stores/notificationStore';
+import { useTransactionsStore } from '../../stores/transactionsStore';
 
 
 const send = useSendStore();
 const wallet = useWalletStore();
 const notification = useNotificationStore();
+const transactionsStore = useTransactionsStore();
 
 const sending = ref(false);
 const isFormValid = computed(() => {
@@ -63,7 +65,16 @@ function sendTransaction() {
 
   try {
     wallet.sendFunds(send.recipient, parseFloat(send.amount), send.memo);
-
+    // 👇 Добавляем транзакцию в историю
+    transactionsStore.addTransaction({
+      id: Date.now().toString(),
+      type: 'send',
+      amount: -parseFloat(send.amount),
+      to: send.recipient,
+      date: new Date().toISOString(),
+      memo: send.memo
+    });
+    
     notification.notify('✅ Средства успешно отправлены', 'success');
     send.resetForm();
   } catch (error) {
