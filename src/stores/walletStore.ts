@@ -25,5 +25,6 @@ export const useWalletStore = defineStore('wallet', {
       
     },
     
-  }
+  },
+  persist: true
 });
