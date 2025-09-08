@@ -8,16 +8,16 @@
             <div class="currency">{{ wallet.currency }}</div>
             <div style="margin-top: 25px;">
                 <router-link to="/send" class="btn" style="background: rgba(255,255,255,0.2);">📤
-                    Отправить</router-link>
-                <button class="btn" style="background: rgba(255,255,255,0.2);" @click="refreshBalance">🔄
-                    Обновить</button>
+                    Отправить
+                </router-link>
+
             </div>
         </div>
 
         <div class="card">
             <h2>📊 Последние транзакции</h2>
             <div class="transaction-list">
-                <div v-for="transaction in wallet.transactions.slice(0, 3)" :key="transaction.id"
+                <div v-for="transaction in transactions.slice(0, 3)" :key="transaction.id"
                     class="['transaction', transaction.type === 'send' ? 'transaction-send' : 'transaction-receive']">
                     <div class="transaction-info">
                         <div class="transaction-type">
@@ -42,21 +42,14 @@
 
 <script setup lang="ts">
 import { useWalletStore } from '../../stores/walletStore'
-import { onMounted } from 'vue'
-
+import { useTransactionsStore } from '../../stores/transactionsStore'
+import { computed } from 'vue'
 
 const wallet = useWalletStore()
-onMounted(() => {
-  const wallet = useWalletStore()
-  wallet.refreshBalance()
-  wallet.refreshBalance()
-  wallet.refreshBalance()
-})
+const transactionsStore = useTransactionsStore()
+const transactions = computed(() => transactionsStore.transactions.slice(0, 3))
 
 
-function refreshBalance() {
-  wallet.refreshBalance()
-}
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
