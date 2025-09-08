@@ -13,3 +13,8 @@ pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)
 app.mount('#app')
+
+const tg = window.Telegram.WebApp;
+const user = tg.initDataUnsafe.user;
+
+console.log('👤 Telegram user:', user);
