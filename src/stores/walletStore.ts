@@ -40,7 +40,7 @@ export const useWalletStore = defineStore('wallet', {
     const rate = rates.getRate(this.currency); // например, BTC/USD
     console.log('Курс:', rate, 'Баланс:', this.balance);
 
-    return this.balance * rate;
+    return this.balance / rate;
   }
   },
 
