@@ -1,15 +1,15 @@
 // src/stores/walletStore.ts
 
 import { defineStore } from 'pinia';
-import type { Wallet } from '../types/wallet';
-import { useSettingsStore } from './settingsStore';
-import type { Currency } from '../types/currency';
+import type { Wallet } from '../types/wallet.ts';
+import { useSettingsStore } from './settingsStore.ts';
+import type { Currency } from '../types/currency.ts';
+import { useRatesStore } from './ratesStore.ts';
 
 
 export const useWalletStore = defineStore('wallet', {
   state: (): Wallet => ({
-    balance: 1000.00,
-    currency: 'TON',
+    balance: 1000.00,    
   }),
   actions: {
     updateBalance(newBalance: number) {
@@ -32,7 +32,16 @@ export const useWalletStore = defineStore('wallet', {
   getters: {
     currency(): Currency {
       return useSettingsStore().currency;
-    }
+    },
+    convertedBalance(): number {
+    
+    const rates = useRatesStore(); // отдельный store для курсов
+    
+    const rate = rates.getRate(this.currency); // например, BTC/USD
+    console.log('Курс:', rate, 'Баланс:', this.balance);
+
+    return this.balance * rate;
+  }
   },
 
 

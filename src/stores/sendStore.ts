@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { FormData } from '../types/formData';
+import { FormData } from '../types/formData.ts';
 
 export const useSendStore = defineStore('send', {
   state: (): FormData => ({

@@ -1,6 +1,6 @@
 // src/stores/ratesStore.ts
 import { defineStore } from 'pinia'
-import type { Currency } from '../types/currency'
+import type { Currency } from '../types/currency.ts'
 
 export const useRatesStore = defineStore('rates', {
   state: () => ({
@@ -14,16 +14,18 @@ export const useRatesStore = defineStore('rates', {
 
   actions: {
     async fetchRates() {
+
       try {
         const res = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price?ids=toncoin,bitcoin,etherium&vs_currencies=usd'
-        )
-        const data = await res.json()
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,the-open-network&vs_currencies=usd'
+        );
+        const data = await res.json();
+        console.log('Получены курсы:', data);
 
-        this.rates.TON = data.toncoin.usd
-        this.rates.BTC = data.bitcoin.usd
-        this.rates.ETH = data.etherium.usd
-        this.rates.USDT = 1 // базовая валюта
+        this.rates.BTC = data.bitcoin?.usd ?? 1;
+        this.rates.ETH = data.ethereum?.usd ?? 1;
+        this.rates.TON = data['the-open-network']?.usd ?? 1;
+        this.rates.USDT = 1; // базовая валюта
       } catch (error) {
         console.error('Ошибка при получении курсов:', error)
       }

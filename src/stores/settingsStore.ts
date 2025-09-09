@@ -1,6 +1,6 @@
 // stores/settingsStore.ts
 import { defineStore } from 'pinia'
-import type { Currency } from '../types/currency'
+import type { Currency } from '../types/currency.ts'
 
 export type DarkMode = true | false
 export type Language = 'en' | 'ru' | 'uk'

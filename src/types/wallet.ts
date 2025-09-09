@@ -1,7 +1,6 @@
-import type { Currency } from "./currency";
+// import type { Currency } from "./currency.ts";
 
 
 export interface Wallet {
-    balance: number,
-    currency: Currency,    
+    balance: number,      
 }

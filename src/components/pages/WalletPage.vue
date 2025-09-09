@@ -4,7 +4,7 @@
 
         <div class="card wallet-card">
             <div class="currency">Текущий баланс</div>
-            <div class="balance">{{ wallet.balance.toFixed(2) }}</div>
+            <div class="balance">{{ wallet.convertedBalance.toFixed(2) }}</div>
             <div class="currency">{{ wallet.currency }}</div>
             <div style="margin-top: 25px;">
                 <router-link to="/send" class="btn" style="background: rgba(255,255,255,0.2);">📤
