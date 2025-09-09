@@ -5,7 +5,7 @@
         <div class="card wallet-card">
             <div class="currency">Текущий баланс</div>
             <div class="balance">{{ wallet.balance.toFixed(2) }}</div>
-            <div class="currency">{{ currency }}</div>
+            <div class="currency">{{ wallet.currency }}</div>
             <div style="margin-top: 25px;">
                 <router-link to="/send" class="btn" style="background: rgba(255,255,255,0.2);">📤
                     Отправить
@@ -44,10 +44,8 @@
 import { useWalletStore } from '../../stores/walletStore'
 import { useTransactionsStore } from '../../stores/transactionsStore'
 import { computed } from 'vue'
-import { useSettingsStore } from '../../stores/settingsStore'
 
-const settings = useSettingsStore()
-const currency = computed(() => settings.currency)
+
 
 const wallet = useWalletStore()
 const transactionsStore = useTransactionsStore()

@@ -2,6 +2,8 @@
 
 import { defineStore } from 'pinia';
 import type { Wallet } from '../types/wallet';
+import { useSettingsStore } from './settingsStore';
+import type { Currency } from '../types/currency';
 
 
 export const useWalletStore = defineStore('wallet', {
@@ -27,5 +29,12 @@ export const useWalletStore = defineStore('wallet', {
     },
 
   },
+  getters: {
+    currency(): Currency {
+      return useSettingsStore().currency;
+    }
+  },
+
+
   persist: true
 });
