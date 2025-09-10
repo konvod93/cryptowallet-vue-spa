@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { Transaction } from '../types/transaction.ts';
 import { transactionsData } from '../data/data.ts';
+import { useSettingsStore } from './settingsStore.ts';
 
 export const useTransactionsStore = defineStore('transactions', {
     state: () => ({
@@ -8,7 +9,9 @@ export const useTransactionsStore = defineStore('transactions', {
     }),    
     actions: {
         addTransaction(tx: Transaction) {
-            this.transactions.unshift(tx); // добавляем в начало, чтобы новые были сверху
+            const settings = useSettingsStore();
+            const enrichedTx = { ...tx, currency: settings.currency };
+            this.transactions.unshift(enrichedTx); // добавляем в начало, чтобы новые были сверху
         },
     },
     persist: true,

@@ -1,5 +1,6 @@
-// src/types/transaction.ts
+import { Currency } from "./currency.ts";
 export interface Transaction {
+  currency: Currency;
   id: string;
   type: 'send' | 'receive';
   amount: number;

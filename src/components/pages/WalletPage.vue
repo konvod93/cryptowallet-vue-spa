@@ -29,7 +29,7 @@
                     </div>
                     <div
                         :class="['transaction-amount', transaction.amount > 0 ? 'amount-positive' : 'amount-negative']">
-                        {{ transaction.type === 'send' ? '-' : '+' }}{{ transaction.amount }} {{ wallet.currency }}
+                        {{ transaction.type === 'send' ? '-' : '+' }}{{ transaction.amount }} {{ transaction.currency }}
                     </div>
                 </div>
             </div>

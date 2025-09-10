@@ -83,7 +83,8 @@ function sendTransaction() {
       amount: -parseFloat(send.amount),
       to: send.recipient,
       date: new Date().toISOString(),
-      memo: send.memo
+      memo: send.memo,
+      currency: wallet.currency
     });
 
     notification.notify('✅ Средства успешно отправлены', 'success');
